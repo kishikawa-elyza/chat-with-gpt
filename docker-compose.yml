@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  kishikawa_docker:
+    image: gcr.io/kaggle-gpu-images/python:latest
+    volumes:
+      - ..:/work
+    working_dir: /work
+    ports:
+      - '8800:8800'
+    container_name: kaggle_env_kishikawa
+    deploy:
+      resources:
+        reservations:
+          # devices:
+          #   - driver: nvidia
+          #     count: 4
+          #     capabilities: [gpu]

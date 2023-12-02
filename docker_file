@@ -1,0 +1,20 @@
+# ベースとなるイメージを指定
+FROM gcr.io/kaggle-gpu-images/python:latest
+
+# 必要なパッケージをインストール
+RUN apt update -y && \
+    apt upgrade -y && \
+    apt install -y build-essential software-properties-common && \
+    pip install --upgrade pip && \
+    pip install peft==0.2.0 && \
+    pip install accelerate==0.21.0 && \
+    pip install datasets==2.12.0 && \
+    pip install --upgrade tensorflow tensorflow-io numpy scipy transformers
+    
+RUN pip install multiprocess
+
+
+RUN mkdir /work && cd /work && mkdir exp_env001
+
+# 作業ディレクトリを設定
+WORKDIR /work
