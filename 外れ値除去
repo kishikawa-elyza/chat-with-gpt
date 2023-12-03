@@ -71,3 +71,10 @@ grid_search.fit(X_train, y_train)
 
 # 最適なパラメータの表示
 print("Best Parameters:", grid_search.best_params_)
+
+columns = (numeric_features.tolist() +
+           [f'category1_{cat}' for cat in preprocessor.named_transformers_['cat']['onehot'].categories_[0]] +
+           [f'category2_{cat}' for cat in preprocessor.named_transformers_['cat']['onehot'].categories_[1]])
+
+
+
