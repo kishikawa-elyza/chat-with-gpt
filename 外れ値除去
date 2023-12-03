@@ -1,0 +1,28 @@
+import pandas as pd
+
+# サンプルデータの作成
+data = {
+    'A': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    'B': [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+}
+df = pd.DataFrame(data)
+
+# 上位と下位の特定の割合を除去する関数
+def remove_outliers(df, column, lower_percent, upper_percent):
+    """
+    DataFrameから指定された列の上位と下位の特定の割合のデータを除去する。
+
+    :param df: 対象のDataFrame
+    :param column: 値を基にソートする列
+    :param lower_percent: 下位の割合 (0〜1の間)
+    :param upper_percent: 上位の割合 (0〜1の間)
+    :return: 除去後のDataFrame
+    """
+    sorted_df = df.sort_values(by=column)
+    lower_bound = int(len(sorted_df) * lower_percent)
+    upper_bound = int(len(sorted_df) * (1 - upper_percent))
+    return sorted_df.iloc[lower_bound:upper_bound]
+
+# テスト：'A'列を基にして、下位10％と上位10％を除去
+test_df = remove_outliers(df, 'A', 0.1, 0.1)
+test_df
