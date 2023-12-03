@@ -1,28 +1,28 @@
-import pandas as pd
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split, GridSearchCV
 
-# サンプルデータの作成
-data = {
-    'A': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-    'B': [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+# データのロード
+iris = load_iris()
+X = iris.data
+y = iris.target
+
+# 訓練データとテストデータに分割
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+# パラメータの範囲を設定
+param_grid = {
+    'n_estimators': [100, 200, 300],
+    'max_features': ['auto', 'sqrt', 'log2'],
+    'max_depth': [4, 5, 6, 7, 8],
+    'criterion': ['gini', 'entropy']
 }
-df = pd.DataFrame(data)
 
-# 上位と下位の特定の割合を除去する関数
-def remove_outliers(df, column, lower_percent, upper_percent):
-    """
-    DataFrameから指定された列の上位と下位の特定の割合のデータを除去する。
+# グリッドサーチの設定
+CV_rfc = GridSearchCV(estimator=RandomForestClassifier(random_state=42), param_grid=param_grid, cv=5)
 
-    :param df: 対象のDataFrame
-    :param column: 値を基にソートする列
-    :param lower_percent: 下位の割合 (0〜1の間)
-    :param upper_percent: 上位の割合 (0〜1の間)
-    :return: 除去後のDataFrame
-    """
-    sorted_df = df.sort_values(by=column)
-    lower_bound = int(len(sorted_df) * lower_percent)
-    upper_bound = int(len(sorted_df) * (1 - upper_percent))
-    return sorted_df.iloc[lower_bound:upper_bound]
+# グリッドサーチの実行
+CV_rfc.fit(X_train, y_train)
 
-# テスト：'A'列を基にして、下位10％と上位10％を除去
-test_df = remove_outliers(df, 'A', 0.1, 0.1)
-test_df
+# 最適なパラメータの表示
+print("Best Parameters:", CV_rfc.best_params_)
